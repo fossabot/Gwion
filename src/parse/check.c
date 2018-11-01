@@ -69,9 +69,9 @@ ANN static m_bool check_fptr_decl(const Env env, const Var_Decl var) {
   const Func  func = v->type->d.func;
   const Type type = func->value_ref->owner_class;
 
+  ADD_REF(var->value->type)
   if(!env->class_def) {
     if(!type || GET_FLAG(func, ae_flag_global)) {
-      ADD_REF(var->value->type)
       return 1;
     }
     ERR_B(var->pos, "can't use non public typedef at global scope.")
@@ -85,7 +85,6 @@ ANN static m_bool check_fptr_decl(const Env env, const Var_Decl var) {
       ERR_B(var->pos, "can't use member variables for static function.")
   } else if(GET_FLAG(v, ae_flag_member))
   ERR_B(var->pos, "can't use member variables for static function.")
-  ADD_REF(var->value->type)
   return 1;
 }
 
@@ -1271,7 +1270,6 @@ ANN static inline void inherit(const Type t) {
 }
 
 ANN m_bool check_class_def(const Env env, const Class_Def class_def) { GWDEBUG_EXE
-  Class_Body body = class_def->body;
   if(tmpl_class_base(class_def->tmpl))
     return 1;
   const Type the_class = class_def->type;
